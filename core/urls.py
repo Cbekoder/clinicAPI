@@ -29,5 +29,6 @@ urlpatterns = [
     path('auth/token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('doctors/', DoctorsListCreateAPIView.as_view(), name='doctors'),
     path('services/', ServiceListCreateAPIView.as_view(), name='services'),
-    path('turns/', TurnListCreateAPIView.as_view(), name='turns')
+    path('turns/', TurnListCreateAPIView.as_view(), name='turns'),
+    path('report/', ReportView.as_view(), name='turns')
 ]
