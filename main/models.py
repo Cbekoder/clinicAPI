@@ -13,6 +13,7 @@ class Doctor(models.Model):
     class Meta:
         verbose_name = "Shifokor"
         verbose_name_plural = "Shifokorlar"
+        ordering = ['-id']
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -26,6 +27,7 @@ class Service(models.Model):
     class Meta:
         verbose_name = "Xizmat"
         verbose_name_plural = "Xizmatlar"
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
@@ -43,6 +45,7 @@ class Turn(models.Model):
     class Meta:
         verbose_name = "Navbat"
         verbose_name_plural = "Navbatlar"
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.first_name + self.last_name
