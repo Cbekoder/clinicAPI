@@ -63,21 +63,15 @@ class TurnListCreateAPIView(ListCreateAPIView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        start_date = self.request.query_params.get('start_date')
-        end_date = self.request.query_params.get('end_date')
+        start_date = self.request.query_params.get('start_date', str(date.today()))
+        end_date = self.request.query_params.get('end_date', str(date.today()))
 
-        if start_date:
-            start_date = parse_date(start_date)
-            if start_date:
-                queryset = queryset.filter(created_at__date__gte=start_date)
+        start_date = parse_date(start_date)
+        end_date = parse_date(end_date)
 
-        if end_date:
-            end_date = parse_date(end_date)
-            if end_date:
-                queryset = queryset.filter(created_at__date__lte=end_date)
+        self.queryset =self.queryset.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
 
-        return queryset
+        return self.queryset
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

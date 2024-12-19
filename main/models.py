@@ -32,6 +32,10 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+TURN_CHOICE = (
+    ('0', 'Doctor'),
+    ('1', 'Service')
+)
 
 class Turn(models.Model):
     first_name = models.CharField(max_length=100)
@@ -40,6 +44,7 @@ class Turn(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
     price = models.FloatField()
     turn_num = models.PositiveIntegerField()
+    turn_type = models.CharField(max_length=10, choices=TURN_CHOICE, default='0')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -54,19 +59,21 @@ class Turn(models.Model):
         with transaction.atomic():
             today = date.today()
             if self.doctor:
-                self.service = None
                 room = self.doctor.room
                 last_turn = Turn.objects.filter(
                     doctor__room=room,
+                    turn_type='0',
                     created_at__date=today
                 ).order_by('-turn_num').first()
+                self.turn_type = "0"
             elif self.service:
-                self.doctor = None
                 room = self.service.room
                 last_turn = Turn.objects.filter(
                     service__room=room,
+                    turn_type='1',
                     created_at__date=today
                 ).order_by('-turn_num').first()
+                self.turn_type = "1"
             else:
                 raise ValidationError({"error": "Service or Doctor is required."})
 

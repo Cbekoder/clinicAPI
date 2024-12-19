@@ -19,7 +19,7 @@ class TurnSerializer(ModelSerializer):
     created_at = DateTimeField(format="%d.%m.%Y %H:%M", read_only=True)
     class Meta:
         model = Turn
-        fields = "__all__"
+        fields = ["first_name", "last_name", "service", "doctor", "price", "turn_num", "created_at"]
         read_only_fields = ["turn_num", "created_at"]
 
 class TurnGetSerializer(ModelSerializer):
@@ -28,5 +28,5 @@ class TurnGetSerializer(ModelSerializer):
     service = ServiceSerializer()
     class Meta:
         model = Turn
-        fields = "__all__"
+        fields = ["first_name", "last_name", "service", "doctor", "price", "turn_num", "created_at"]
         read_only_fields = ["turn_num", "created_at"]
