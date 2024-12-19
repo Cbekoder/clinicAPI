@@ -125,32 +125,38 @@ class ReportView(APIView):
         doctors = Doctor.objects.all()
         services = Service.objects.all()
 
+        doctor_total = 0
         doctor_report = []
         for doctor in doctors:
-            total_price = Turn.objects.filter(doctor=doctor).aggregate(total_price=Sum('price'))[
+            total_price = turns.filter(doctor=doctor).aggregate(total_price=Sum('price'))[
                               'total_price'] or 0
             doctor_data = DoctorSerializer(doctor).data
             if total_price > 0:
+                doctor_total += total_price
                 doctor_report.append({
                     "doctor": doctor_data,
                     "total_price": total_price
                 })
 
+        service_total = 0
         service_report = []
         for service in services:
-            total_price = Turn.objects.filter(service=service).aggregate(total_price=Sum('price'))[
+            total_price = turns.filter(service=service).aggregate(total_price=Sum('price'))[
                               'total_price'] or 0
             service_data = ServiceSerializer(service).data
             if total_price > 0:
+                service_total += total_price
                 service_report.append({
                     "service": service_data,
                     "total_price": total_price
                 })
 
         return Response({
-            # "total_price": total_sum,
+            "total_price": total_sum,
             "start_date": start_date,
             "end_date": end_date,
+            "doctors_total": doctor_total,
             "doctor_report": doctor_report,
+            "services_total": service_total,
             "service_report": service_report
         })
