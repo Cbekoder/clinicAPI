@@ -122,7 +122,7 @@ class ReportView(APIView):
         doctor_total = 0
         doctor_report = []
         for doctor in doctors:
-            total_price = turns.filter(doctor=doctor).aggregate(total_price=Sum('price'))[
+            total_price = turns.filter(doctor=doctor, turn_type=0).aggregate(total_price=Sum('price'))[
                               'total_price'] or 0
             doctor_data = DoctorSerializer(doctor).data
             if total_price > 0:
@@ -135,7 +135,7 @@ class ReportView(APIView):
         service_total = 0
         service_report = []
         for service in services:
-            total_price = turns.filter(service=service).aggregate(total_price=Sum('price'))[
+            total_price = turns.filter(service=service, turn_type=1).aggregate(total_price=Sum('price'))[
                               'total_price'] or 0
             service_data = ServiceSerializer(service).data
             if total_price > 0:
