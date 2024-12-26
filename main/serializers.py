@@ -15,18 +15,24 @@ class ServiceSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class TurnSerializer(ModelSerializer):
-    created_at = DateTimeField(format="%d.%m.%Y %H:%M", read_only=True)
-    class Meta:
-        model = Turn
-        fields = ["first_name", "last_name", "service", "doctor", "price", "turn_num", "created_at"]
-        read_only_fields = ["turn_num", "created_at"]
-
 class TurnGetSerializer(ModelSerializer):
     created_at = DateTimeField(format="%d.%m.%Y %H:%M", read_only=True)
     doctor = DoctorSerializer()
     service = ServiceSerializer()
     class Meta:
         model = Turn
-        fields = ["first_name", "last_name", "service", "doctor", "price", "turn_num", "created_at"]
+        fields = ["first_name", "last_name", "doctor", "service", "price", "turn_num", "created_at"]
         read_only_fields = ["turn_num", "created_at"]
+
+
+class TurnSerializer(ModelSerializer):
+    created_at = DateTimeField(format="%d.%m.%Y %H:%M", read_only=True)
+    class Meta:
+        model = Turn
+        fields = ["first_name", "last_name", "doctor", "service", "price", "turn_num", "created_at"]
+        read_only_fields = ["turn_num", "created_at"]
+
+    def to_representation(self, instance):
+        # representation = super().to_representation(instance)
+        representation = TurnGetSerializer(instance).data
+        return representation
